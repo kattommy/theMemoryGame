@@ -17,10 +17,11 @@ public class MenuController {
             switch (option) {
                 case 1:
                     System.out.println("you choose easy level");
-                    DataService.showTable(DataService.getWords());
+                    DataService.showEasyTable(DataService.getWords());
                     break;
                 case 2:
                     System.out.println("you choose difficultly level");
+                    DataService.showHardTable(DataService.getWords());
                     break;
                 case 3:
                     System.out.println("You are leaving the game, please come back");
@@ -30,7 +31,6 @@ public class MenuController {
             }
         }
     }
-
     private static ConsoleMenu buildMenu() {
 
         List<String> options = new ArrayList<>();
