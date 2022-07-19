@@ -30,10 +30,10 @@ public class DataService {
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < wordsTable[0].length; j++) {
-                if (wordsTable[i][j][1].equals("0")) {
-                    System.out.print(wordsTable[i][j][0] + " - ");
+                if (wordsTable[i][j][1].equals("0")){
+                    System.out.print("\t \t \t" + wordsTable[i][j][0]);
                 } else {
-                    System.out.print("X" + " - ");
+                    System.out.print("\t \t \t" + "X");
                 }
             }
             System.out.println("\n");
@@ -239,7 +239,7 @@ public class DataService {
     }
 
 
-    public static void easyGame(String[][][] tableToGame, int numberOfChanges) throws FileNotFoundException {
+    public static void easyGame(String[][][] tableToGame, int numberOfChanges) throws IOException {
         System.out.println("Level: Easy");
         System.out.println("Guess chances: " + numberOfChances);
 
@@ -248,10 +248,12 @@ public class DataService {
         List<Integer> coordinatesOfFirstWord = getCoordinates();
         String firstWord = getWordFromTableByCoordinates(coordinatesOfFirstWord, tableToGame);
 
+
         showTableWithWords(tableToGame);
 
         List<Integer> coordinatesOfSecondWord = getCoordinates();
         String secondWord = getWordFromTableByCoordinates(coordinatesOfSecondWord, tableToGame);
+
 
         showTableWithWords(tableToGame);
 
@@ -278,7 +280,7 @@ public class DataService {
         }
     }
 
-    public static void harderGame(String[][][] tableToGame, int numberOfChances) throws FileNotFoundException {
+    public static void harderGame(String[][][] tableToGame, int numberOfChances) throws IOException {
         System.out.println("Level: Hard");
         System.out.println("Guess chances: " + numberOfChances);
 
@@ -287,10 +289,12 @@ public class DataService {
         List<Integer> coordinatesOfFirstWord = getCoordinatesToHarderVersion();
         String firstWord = getWordFromTableByCoordinates(coordinatesOfFirstWord, tableToGame);
 
+
         showTableWithWords(tableToGame);
 
         List<Integer> coordinatesOfSecondWord = getCoordinates();
         String secondWord = getWordFromTableByCoordinates(coordinatesOfSecondWord, tableToGame);
+
 
         showTableWithWords(tableToGame);
 
