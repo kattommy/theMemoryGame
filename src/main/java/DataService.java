@@ -26,7 +26,7 @@ public class DataService {
     public static void showTableWithWords(String[][][] wordsTable) {
 
         for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 9; j++) {
+            for (int j = 0; j < wordsTable[0].length; j++) {
                 if (wordsTable[i][j][1].equals("0")) {
                     System.out.print(wordsTable[i][j][0] + " - ");
                 } else {
@@ -38,7 +38,7 @@ public class DataService {
     }
 
 
-    public static void showEasyTable(List<String> wordsFromFIle) {
+    public static String[][][] createEasyTable(List<String> wordsFromFIle) {
 
         String[][][] wordsTable = new String[3][5][2];
 
@@ -50,13 +50,13 @@ public class DataService {
         wordsTable[0][3][0] = "C";
         wordsTable[0][4][0] = "D";
 
-        wordsTable[0][0][0] = "0";
-        wordsTable[1][0][0] = "0";
-        wordsTable[2][0][0] = "0";
-        wordsTable[0][1][0] = "0";
-        wordsTable[0][2][0] = "0";
-        wordsTable[0][3][0] = "0";
-        wordsTable[0][4][0] = "0";
+        wordsTable[0][0][1] = "0";
+        wordsTable[1][0][1] = "0";
+        wordsTable[2][0][1] = "0";
+        wordsTable[0][1][1] = "0";
+        wordsTable[0][2][1] = "0";
+        wordsTable[0][3][1] = "0";
+        wordsTable[0][4][1] = "0";
 
 
         Random random = new Random();
@@ -70,16 +70,15 @@ public class DataService {
         }
         Collections.shuffle(wordsToShow);
         int listIterator = 0;
+
         for (int i = 1; i < 3; i++) {
             for (int j = 1; j < 5; j++) {
                 wordsTable[i][j][0] = wordsToShow.get(listIterator);
-                wordsTable[i][j][1] = "0";
+                wordsTable[i][j][1] = "1";
                 listIterator += 1;
             }
         }
-
-       showTableWithWords(wordsTable);
-
+        return wordsTable;
     }
 
 
@@ -125,7 +124,7 @@ public class DataService {
         for (int i = 1; i < 3; i++) {
             for (int j = 1; j < 9; j++) {
                 wordsTable[i][j][0] = wordsToShow.get(listIterator);
-                wordsTable[i][j][1] = "0";
+                wordsTable[i][j][1] = "1";
                 listIterator += 1;
             }
         }
@@ -134,60 +133,77 @@ public class DataService {
 
     }
 
-        public void compareTwoWords(String[][][] wordsTable, String firstWord, String secondWord){
-            for (int i = 1; i < 3; i++) {
-                for (int j = 1; j < 9; j++) {
-                    if (firstWord.equals(secondWord)) {
-                        System.out.println(wordsTable[i][j][0]);
-                    } else {
-                        System.out.println("X");
-                    }
+    public static void compareTwoWords(String[][][] wordsTable, String firstWord, String secondWord) {
+        for (int i = 1; i < 3; i++) {
+            for (int j = 1; j < 9; j++) {
+                if (firstWord.equals(secondWord)) {
+                    wordsTable[i][j][1] = "0";
+                } else {
+                    wordsTable[i][j][1] = "1";
                 }
+            }
         }
     }
 
-    public List<Integer> getCoordinates(){
+    public static List<Integer> getCoordinates() {
         int firstNumber = 0;
         int secondNumber;
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the coordinates ex. \"A1\" ");
-       String coordinates = sc.next().trim();
-       if(coordinates.length() != 2){
-           System.out.println("Wrong coordinate, it must be one letter and one number");
-       }
-      String letter = Arrays.toString(coordinates.split("[A-Za-z]"));
-      String number = Arrays.toString(coordinates.split("[0-9]"));
+        String coordinates = sc.next().trim();
+        if (coordinates.length() != 2) {
+            System.out.println("Wrong coordinate, it must be one letter and one number");
+        }
+        char letter = coordinates.charAt(0);
+        char number = coordinates.charAt(1);
 
 
-       switch(letter){
-           case "A":
-               firstNumber = 1;
-               break;
-           case "B":
-               firstNumber = 2;
-               break;
-           case "C":
-               firstNumber = 3;
-               break;
-           case "D":
-               firstNumber = 4;
-               break;
-       }
+        switch (letter) {
+            case 'a':
+                firstNumber = 1;
+                break;
+            case 'b':
+                firstNumber = 2;
+                break;
+            case 'c':
+                firstNumber = 3;
+                break;
+            case 'd':
+                firstNumber = 4;
+                break;
+        }
 
-       secondNumber = Integer.parseInt(number) -1;
-       List<Integer> coordinatesList = new ArrayList<>();
-       coordinatesList.add(firstNumber);
-       coordinatesList.add(secondNumber);
+        secondNumber = Character.getNumericValue(number);
+        List<Integer> coordinatesList = new ArrayList<>();
+        coordinatesList.add(firstNumber);
+        coordinatesList.add(secondNumber);
 
-       return coordinatesList;
-       }
+        return coordinatesList;
+    }
 
+    public static String getWordFromTableByCoordinates(List<Integer> coordinates, String[][][] tableWithWords) {
+        tableWithWords[coordinates.get(1)][coordinates.get(0)][1] = "0";
+        return tableWithWords[coordinates.get(1)][coordinates.get(0)][0];
+    }
 
+    public static void game() throws FileNotFoundException {
 
-    // przelącznik czy wyswietlic slowo czy x
-    // metoda przyjmuje slowo i zwraca slowo labo x
+        String[][][] tableToGame = createEasyTable(getWords());
 
+        showTableWithWords(tableToGame);
 
+       String firstWord = getWordFromTableByCoordinates(getCoordinates(), tableToGame);
+
+        showTableWithWords(tableToGame);
+
+        String secondWord = getWordFromTableByCoordinates(getCoordinates(), tableToGame);
+
+        showTableWithWords(tableToGame);
+
+        compareTwoWords(tableToGame, firstWord, secondWord);
+
+        showTableWithWords(tableToGame);
+    }
 }
 
 

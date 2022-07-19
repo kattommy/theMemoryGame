@@ -17,7 +17,7 @@ public class MenuController {
             switch (option) {
                 case 1:
                     System.out.println("you choose easy level");
-                    DataService.showEasyTable(DataService.getWords());
+                    DataService.game();
                     break;
                 case 2:
                     System.out.println("you choose difficultly level");
