@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -5,7 +6,7 @@ import java.util.Scanner;
 public class MenuController {
 
 
-    public void run() {
+    public void run() throws FileNotFoundException {
         Scanner sc = new Scanner(System.in);
         ConsoleMenu consoleMenu = buildMenu();
 
@@ -16,6 +17,7 @@ public class MenuController {
             switch (option) {
                 case 1:
                     System.out.println("you choose easy level");
+                    DataService.showTable(DataService.getWords());
                     break;
                 case 2:
                     System.out.println("you choose difficultly level");
