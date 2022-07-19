@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.util.*;
 
 public class DataService {
+    private static int numberOfChances = 10;
+    private static int win = 0;
 
-    public static List<String> getWords() throws FileNotFoundException {
+
+    public static List<String> getWordsFromFile() throws FileNotFoundException {
         BufferedReader words = new BufferedReader(new FileReader("src/main/resources/words.txt"));
         String filePath = "src/main/resources/words.txt";
         List<String> wordsFromFIle = new ArrayList<>();
@@ -82,7 +85,7 @@ public class DataService {
     }
 
 
-    public static void showHardTable(List<String> wordsFromFIle) {
+    public static String[][][] createHardTable(List<String> wordsFromFIle) {
 
         String[][][] wordsTable = new String[3][9][2];
 
@@ -128,21 +131,21 @@ public class DataService {
                 listIterator += 1;
             }
         }
-        showTableWithWords(wordsTable);
-
-
+        return wordsTable;
     }
 
-    public static void compareTwoWords(String[][][] wordsTable, String firstWord, String secondWord) {
-        for (int i = 1; i < 3; i++) {
-            for (int j = 1; j < 9; j++) {
-                if (firstWord.equals(secondWord)) {
-                    wordsTable[i][j][1] = "0";
-                } else {
-                    wordsTable[i][j][1] = "1";
-                }
-            }
+    public static int compareTwoWords(String[][][] wordsTable, String firstWord, String secondWord, List<Integer> coordinatesOfFirstWord, List<Integer> coordinatesOfSecondWord) {
+
+        if (firstWord.equals(secondWord)) {
+            wordsTable[coordinatesOfFirstWord.get(1)][coordinatesOfFirstWord.get(0)][1] = "0";
+            wordsTable[coordinatesOfSecondWord.get(1)][coordinatesOfSecondWord.get(0)][1] = "0";
+            return win += 1;
+        } else {
+            wordsTable[coordinatesOfFirstWord.get(1)][coordinatesOfFirstWord.get(0)][1] = "1";
+            wordsTable[coordinatesOfSecondWord.get(1)][coordinatesOfSecondWord.get(0)][1] = "1";
+            numberOfChances--;
         }
+        return win;
     }
 
     public static List<Integer> getCoordinates() {
@@ -181,28 +184,131 @@ public class DataService {
         return coordinatesList;
     }
 
+    public static List<Integer> getCoordinatesToHarderVersion() {
+        int firstNumber = 0;
+        int secondNumber;
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the coordinates ex. \"A1\" ");
+        String coordinates = sc.next().trim();
+        if (coordinates.length() != 2) {
+            System.out.println("Wrong coordinate, it must be one letter and one number");
+        }
+        char letter = coordinates.charAt(0);
+        char number = coordinates.charAt(1);
+
+
+        switch (letter) {
+            case 'a':
+                firstNumber = 1;
+                break;
+            case 'b':
+                firstNumber = 2;
+                break;
+            case 'c':
+                firstNumber = 3;
+                break;
+            case 'd':
+                firstNumber = 4;
+                break;
+            case 'e':
+                firstNumber = 5;
+                break;
+            case 'f':
+                firstNumber = 6;
+                break;
+            case 'g':
+                firstNumber = 7;
+                break;
+            case 'h':
+                firstNumber = 8;
+                break;
+        }
+
+        secondNumber = Character.getNumericValue(number);
+        List<Integer> coordinatesList = new ArrayList<>();
+        coordinatesList.add(firstNumber);
+        coordinatesList.add(secondNumber);
+
+        return coordinatesList;
+    }
+
+
     public static String getWordFromTableByCoordinates(List<Integer> coordinates, String[][][] tableWithWords) {
         tableWithWords[coordinates.get(1)][coordinates.get(0)][1] = "0";
         return tableWithWords[coordinates.get(1)][coordinates.get(0)][0];
     }
 
-    public static void game() throws FileNotFoundException {
 
-        String[][][] tableToGame = createEasyTable(getWords());
-
-        showTableWithWords(tableToGame);
-
-       String firstWord = getWordFromTableByCoordinates(getCoordinates(), tableToGame);
+    public static void easyGame(String[][][] tableToGame, int numberOfChanges) throws FileNotFoundException {
+        System.out.println("Level: Easy");
+        System.out.println("Guess chances: " + numberOfChances);
 
         showTableWithWords(tableToGame);
 
-        String secondWord = getWordFromTableByCoordinates(getCoordinates(), tableToGame);
+        List<Integer> coordinatesOfFirstWord = getCoordinates();
+        String firstWord = getWordFromTableByCoordinates(coordinatesOfFirstWord, tableToGame);
 
         showTableWithWords(tableToGame);
 
-        compareTwoWords(tableToGame, firstWord, secondWord);
+        List<Integer> coordinatesOfSecondWord = getCoordinates();
+        String secondWord = getWordFromTableByCoordinates(coordinatesOfSecondWord, tableToGame);
 
         showTableWithWords(tableToGame);
+
+        int numberMatch = compareTwoWords(tableToGame, firstWord, secondWord, coordinatesOfFirstWord, coordinatesOfSecondWord);
+
+        if (numberMatch == 4) {
+            System.out.println("You win!!!!!");
+            numberOfChances = 10;
+            return;
+        } else {
+            numberOfChanges = numberOfChanges - 1;
+
+            if (numberOfChanges > 0) {
+                easyGame(tableToGame, numberOfChanges);
+            } else {
+                if (numberOfChances > 0) {
+                    easyGame(tableToGame, numberOfChances);
+                } else {
+                    System.out.println("GAME OVER!");
+                    numberOfChances = 10;
+                    return;
+                }
+            }
+        }
+    }
+
+    public static void harderGame(String[][][] tableToGame, int numberOfChances) throws FileNotFoundException {
+        System.out.println("Level: Hard");
+        System.out.println("Guess chances: " + numberOfChances);
+
+        showTableWithWords(tableToGame);
+
+        List<Integer> coordinatesOfFirstWord = getCoordinatesToHarderVersion();
+        String firstWord = getWordFromTableByCoordinates(coordinatesOfFirstWord, tableToGame);
+
+        showTableWithWords(tableToGame);
+
+        List<Integer> coordinatesOfSecondWord = getCoordinates();
+        String secondWord = getWordFromTableByCoordinates(coordinatesOfSecondWord, tableToGame);
+
+        showTableWithWords(tableToGame);
+
+        int numberMatch = compareTwoWords(tableToGame, firstWord, secondWord, coordinatesOfFirstWord, coordinatesOfSecondWord);
+
+        if (numberMatch == 8) {
+            System.out.println("You win!!!!!");
+            numberOfChances = 15;
+            return;
+        } else {
+            if (numberOfChances > 0) {
+                harderGame(tableToGame, numberOfChances);
+            } else {
+                System.out.println("GAME OVER!");
+                numberOfChances = 15;
+                return;
+            }
+        }
     }
 }
 

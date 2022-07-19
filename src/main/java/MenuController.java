@@ -17,11 +17,11 @@ public class MenuController {
             switch (option) {
                 case 1:
                     System.out.println("you choose easy level");
-                    DataService.game();
+                    DataService.easyGame(DataService.createEasyTable(DataService.getWordsFromFile()), 10);
                     break;
                 case 2:
-                    System.out.println("you choose difficultly level");
-                    DataService.showHardTable(DataService.getWords());
+                    System.out.println("you choose hard level");
+                    DataService.harderGame(DataService.createHardTable(DataService.getWordsFromFile()), 15);
                     break;
                 case 3:
                     System.out.println("You are leaving the game, please come back");
@@ -35,7 +35,7 @@ public class MenuController {
 
         List<String> options = new ArrayList<>();
         options.add("Choose easy level");
-        options.add("choose difficultly level");
+        options.add("choose hard level");
         options.add("finish the game");
 
         String header = "Welcome to the memory game!";
